@@ -1,3 +1,4 @@
+import sys 
 
 def menu():
     print("-------------------------")
@@ -8,9 +9,23 @@ def menu():
     print("4 - Cancelar Ingresso (devolução)")
     escolhe_opcao()
 
+def validaOpcao (opcao, min, max):
+    if opcao.isdigit():
+        opcao = int(opcao)
+        if opcao < min or opcao > max:
+            print(f"Entrada inválida, digite um número entre {min} e {max}")
+            return escolhe_opcao()
+        else:
+            return opcao
+    else:
+        print("Valor inválido, digite um número!")
+        return escolhe_opcao()
+
+        
 
 def escolhe_opcao():
-    opcao = int(input("Digite a opção: "))
+    opcao = input("Digite a opção: ")
+    validaOpcao(opcao, 0, 4)
     while True:
         if opcao == 1:
             mostra_plateia()
@@ -25,6 +40,7 @@ def escolhe_opcao():
             print()
             break
         elif opcao == 0:
+            sys.exit("Encerrando programa....")
             break
     
 
