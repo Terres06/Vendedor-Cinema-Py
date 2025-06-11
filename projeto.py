@@ -13,16 +13,17 @@ def menu():
     escolhe_opcao()
 
 def validaOpcao (opcao, min, max):
-    if opcao.isdigit():
-        opcao = int(opcao)
-        if opcao < min or opcao > max:
-            print(f"Entrada inválida, digite um número entre {min} e {max}")
-            return escolhe_opcao()
-        else:
-            return opcao
-    else:
-        print("Valor inválido, digite um número!")
-        return escolhe_opcao()
+    while True: 
+        try:
+            opcao = int(opcao)
+            if opcao < min or opcao > max:
+                print(f"Valor inválido. Digite um número entre {min} e {max}")
+                opcao = input("Digite novamente: ")
+            else:
+                return opcao
+        except ValueError:
+            print("Entrada inválida. Digite um número!")
+            opcao = input("Digite novamente: ")
 
 def escolhe_opcao():
 
@@ -37,11 +38,11 @@ def escolhe_opcao():
             mostra_ocupacao()
             menu()
         elif opcao == 3:
-            print()
+            vender_ingresso()
             menu()
         elif opcao == 4:
             print()
-            break
+            menu()
         elif opcao == 0:
             os.system('cls')
             print("Saindo do programa....")
@@ -110,7 +111,37 @@ def mostra_ocupacao():
     print("-------------------------\nFim da ocupação")
 
 def vender_ingresso():
-    print()
+    plateia = carregar_dados(ARQUIVO)
+    while True:
+        mostra_plateia()
+        while True:
+            poltrona = validaOpcao(input("Digite a poltrona desejada <1.120> (0 encerra): "),0 , 120)
+            if poltrona == 0:
+                print("Fim da venda de ingressos")
+                return
+            linha = (poltrona - 1) // 12
+            coluna = (poltrona - 1) % 12
+            
+            if plateia[linha][coluna] != '-':
+                print("Poltrona ocupada. Tente novamente.")
+            else:
+                break
+        while True:
+            entrada = input("Digite o tipo da entrada (m)eia ou (i)nteira: ").strip().upper()
+            if entrada != 'M' or 'I':
+                break
+            else:
+                print("Entrada inválida. Digite M ou I!")
+        
+        plateia[linha][coluna] = entrada
+        salvar_dados(ARQUIVO, plateia)
+
+        continuar = validaOpcao(input("Deseja vender outro ingresso? (1)Sim (0)Não: "),0,1)
+        if continuar == 0:
+            print("Venda de ingressos encerrada.")
+            break
+
+
 def cancel_ingresso():
     print()
 
