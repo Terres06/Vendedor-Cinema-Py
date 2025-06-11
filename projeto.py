@@ -41,7 +41,7 @@ def escolhe_opcao():
             vender_ingresso()
             menu()
         elif opcao == 4:
-            print()
+            cancel_ingresso()
             menu()
         elif opcao == 0:
             os.system('cls')
@@ -128,7 +128,7 @@ def vender_ingresso():
                 break
         while True:
             entrada = input("Digite o tipo da entrada (m)eia ou (i)nteira: ").strip().upper()
-            if entrada != 'M' or 'I':
+            if entrada in ('M', 'I'):
                 break
             else:
                 print("Entrada inválida. Digite M ou I!")
@@ -143,7 +143,29 @@ def vender_ingresso():
 
 
 def cancel_ingresso():
-    print()
+    plateia = carregar_dados(ARQUIVO)
+    while True:
+        mostra_plateia()
+        while True:
+            poltrona = validaOpcao(input("Digite a poltrona a ser cancelada: "), 0,120)
+            if poltrona == 0:
+                print("Fim do cancelamento: ")
+                return
+            
+            linha = (poltrona - 1) // 12
+            coluna = (poltrona - 1) % 12
+
+            if plateia[linha][coluna] == 'I' or plateia[linha][coluna] == 'M':
+                plateia[linha][coluna] = '-'
+                print(f"Poltrona {poltrona} cancelada.")
+                salvar_dados(ARQUIVO, plateia)
+            else:
+                print("Essa poltrona ja está vazia")
+
+            continuar = validaOpcao(input("Deseja cancelar outro ingresso? (1)Sim (0)Não: "),0,1)
+            if continuar == 0:
+                print("Fim do cancelamento. ")
+                break
 
 # -------------------------------------------------------------
 # main()
